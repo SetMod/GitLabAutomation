@@ -19,5 +19,5 @@ deploy:
   only:
     - main
   script:
-    - cd ansible/
-    - ansible-playbook -i hosts.ini deploy.yml -v -D
+    - ansible-galaxy collection install community.docker
+    - ansible-playbook -i ansible/hosts.ini ansible/deploy.yml -v -D
