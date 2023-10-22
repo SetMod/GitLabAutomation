@@ -37,7 +37,7 @@
 
     - name: Start the Python application
       ansible.builtin.command:
-        cmd: python3 {{ app_path }}
+        cmd: python3 {{ app_path }} &
       tags:
         - deploy
 
@@ -48,3 +48,8 @@
         return_content: true
       register: app_response
       failed_when: app_response is failed or "'Hello, World!' not in app_response.content"
+
+    - name: Kill the Python process for app.py
+      ansible.builtin.command:
+        cmd: pkill -f "python3 {{ app_path }}"
+      ignore_errors: yes
