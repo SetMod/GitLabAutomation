@@ -32,7 +32,6 @@
         requirements: "{{ app_requirements_file }}"
       when:
         - app_requirements_file is defined
-        - app_requirements_file
       tags:
         - deploy
 
