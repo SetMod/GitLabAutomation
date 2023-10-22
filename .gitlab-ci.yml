@@ -1,5 +1,4 @@
 stages:
-  # - configure
   - deploy
 
 default:
@@ -10,16 +9,6 @@ default:
     - apk update
     - apk add --no-cache ansible
     - rm -rf /var/cache/apk/*
-
-# variables:
-#   TEST: test
-
-# configure:
-#   stage: configure
-#   only:
-#     - main
-#   script:
-#     - ansible-playbook -i hosts.ini ansible/deploy.yml -t configure -v -D
 
 deploy:
   stage: deploy
