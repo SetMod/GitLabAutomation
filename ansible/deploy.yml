@@ -30,13 +30,14 @@
         app_image_tag: latest
       when: app_image_tag is not defined
 
-    - name: Build image and with build args
+    - name: Build image "{{ app_image_name }}:{{ app_image_tag }}"
       community.docker.docker_image:
         name: "{{ app_image_name }}"
         tag: "{{ app_image_tag }}"
         build:
-          path: "{{ app_dockerfile_path }}"
+          path: "{{ base_dir }}"
         source: build
+        state: present
 
     - name: Start "{{ app_image_name }}" container
       community.docker.docker_container:
@@ -56,7 +57,7 @@
       register: app_response
       failed_when: app_response is failed or "'Hello, World!' not in app_response.content"
 
-    - name: Stop a container
+    - name: Stop "{{ app_image_name }}" container
       community.docker.docker_container:
         name: "{{ app_image_name }}"
         state: stopped
