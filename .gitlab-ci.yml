@@ -3,8 +3,13 @@ stages:
   - deploy
 
 default:
+  tags:
+    - practice
   before_script:
+    - echo "------ Install Ansible ------"
+    - apk update
     - apk add --no-cache ansible
+    - rm -rf /var/cache/apk/*
 
 # variables:
 #   TEST: test
@@ -21,4 +26,5 @@ deploy:
   only:
     - main
   script:
-    - ansible-playbook -i hosts.ini ansible/deploy.yml -v -D
+    - cd ansible/
+    - ansible-playbook -i hosts.ini deploy.yml -v -D
