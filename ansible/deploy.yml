@@ -36,7 +36,15 @@
         - deploy
 
     - name: Start the Python application
-      command:
+      ansible.builtin.command:
         cmd: python {{ app_path }}
       tags:
         - deploy
+
+    - name: Check app response and content 
+      ansible.builtin.uri:
+        url: http://localhost:5000
+        method: GET
+        return_content: true
+      register: app_response
+      failed_when: app_response is failed or "'Hello, World!' not in app_response.content"
