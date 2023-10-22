@@ -10,6 +10,10 @@ default:
     - apk add --no-cache ansible
     - rm -rf /var/cache/apk/*
 
+variables:
+  ANSIBLE_FORCE_COLOR: "True"
+  ANSIBLE_PIPELINING: "True"
+
 deploy:
   stage: deploy
   only:
