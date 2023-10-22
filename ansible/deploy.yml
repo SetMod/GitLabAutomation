@@ -7,13 +7,13 @@
   tasks:
     - name: Install packages
       ansible.builtin.package:
-        name:
-          - "{{ packages }}" 
+        name: "{{ item }}" 
         state: present
       when:
         - packages is defined
         - packages is iterable
         - packages | length > 1
+      loop: "{{ packages }}" 
       tags:
         - configure
 
