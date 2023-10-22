@@ -7,7 +7,8 @@
   tasks:
     - name: Install packages
       ansible.builtin.package:
-        name: "{{ packages }}" 
+        name:
+          - "{{ packages }}" 
         state: present
       when:
         - packages is defined
