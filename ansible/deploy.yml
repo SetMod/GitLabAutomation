@@ -37,7 +37,7 @@
 
     - name: Start the Python application
       ansible.builtin.command:
-        cmd: python {{ app_path }}
+        cmd: python3 {{ app_path }}
       tags:
         - deploy
 
