@@ -2,9 +2,8 @@ from flask import Flask
 import os
 
 app = Flask(__name__)
-app_port = int(os.getenv("APP_HOST", "0.0.0.0"))
-app_host = os.getenv("APP_PORT", 5000)
-
+app_host = os.getenv("APP_HOST", "0.0.0.0")
+app_port = int(os.getenv("APP_PORT", 5000))
 
 @app.route("/")
 def hello():
