@@ -1,0 +1,42 @@
+---
+- name: Deploy Python Application
+  hosts: all
+  become: yes
+  vars_files:
+    - vars/myvars.yml
+  tasks:
+    - name: Install packages
+      ansible.builtin.package:
+        name: "{{ packages }}" 
+        state: present
+      when:
+        - packages is defined
+        - packages is iterable
+        - packages | lenght > 1
+      tags:
+        - configure
+
+    - name: Clone Git repository
+      ansible.builtin.git:
+        repo: "{{ git_repo_clone_url }}"
+        dest: "{{ git_repo_clone_dest }}"
+      when:
+        - git_repo_clone_url is defined and git_repo_clone_url
+        - git_repo_clone_dest is defined and git_repo_clone_dest
+      tags:
+        - configure
+
+    - name: Install Python dependencies
+      ansible.builtin.pip:
+        requirements: "{{ app_requirements_file }}"
+      when:
+        - app_requirements_file is defined
+        - app_requirements_file
+      tags:
+        - deploy
+
+    - name: Start the Python application
+      command:
+        cmd: python {{ app_path }}
+      tags:
+        - deploy
