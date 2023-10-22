@@ -25,8 +25,8 @@
       tags:
         - deploy
 
-    - name: Set app image tag
-      ansible.builtin.set_facts:
+    - name: Set app image tag if not defined
+      ansible.builtin.set_fact:
         app_image_tag: latest
       when: app_image_tag is not defined
 
@@ -49,6 +49,10 @@
         url: http://localhost:{{ app_port }}
         method: GET
         return_content: true
+        timeout: 10
+      retries: 10
+      delay: 10
+      until: app_response.status == 200
       register: app_response
       failed_when: app_response is failed or "'Hello, World!' not in app_response.content"
 
