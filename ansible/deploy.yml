@@ -17,16 +17,6 @@
       tags:
         - configure
 
-    # - name: Clone Git repository
-    #   ansible.builtin.git:
-    #     repo: "{{ git_repo_clone_url }}"
-    #     dest: "{{ git_repo_clone_dest }}"
-    #   when:
-    #     - git_repo_clone_url is defined and git_repo_clone_url
-    #     - git_repo_clone_dest is defined and git_repo_clone_dest
-    #   tags:
-    #     - configure
-
     - name: Install Python dependencies
       ansible.builtin.pip:
         requirements: "{{ app_requirements_file }}"
@@ -35,21 +25,34 @@
       tags:
         - deploy
 
-    - name: Start the Python application
-      ansible.builtin.command:
-        cmd: python3 {{ app_path }} &
-      tags:
-        - deploy
+    - name: Set app image tag
+      ansible.builtin.set_facts:
+        app_image_tag: latest
+      when: app_image_tag is not defined
+
+    - name: Build image and with build args
+      community.docker.docker_image:
+        name: "{{ app_image_name }}"
+        tag: "{{ app_image_tag }}"
+        build:
+          path: "{{ app_dockerfile_path }}"
+        source: build
+
+    - name: Start "{{ app_image_name }}" container
+      community.docker.docker_container:
+        name: "{{ app_image_name }}"
+        state: present
+        image: "{{ app_image_name }}:{{ app_image_tag }}"
 
     - name: Check app response and content 
       ansible.builtin.uri:
-        url: http://localhost:5000
+        url: http://localhost:{{ app_port }}
         method: GET
         return_content: true
       register: app_response
       failed_when: app_response is failed or "'Hello, World!' not in app_response.content"
 
-    - name: Kill the Python process for app.py
-      ansible.builtin.command:
-        cmd: pkill -f "python3 {{ app_path }}"
-      ignore_errors: yes
+    - name: Stop a container
+      community.docker.docker_container:
+        name: "{{ app_image_name }}"
+        state: stopped

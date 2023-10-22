@@ -3,9 +3,12 @@ packages:
   - py3-pip
   - git
 
-git_repo_clone_url: http://gitlab-web/practice/automation.git
-git_repo_clone_dest: /opt/automation
-
 base_dir: /builds/practice/automation
+app_dockerfile_path: "{{ base_dir }}/Dockerfile"
+
+app_image_name: practice-app
+app_image_tag: v1
+
 app_requirements_file: "{{ base_dir }}/requirements.txt"
 app_path: "{{ base_dir }}/app.py"
+app_port: lookup('ansible.builtin.env', 'APP_PORT') | default(5000)
