@@ -1,0 +1,24 @@
+stages:
+  # - configure
+  - deploy
+
+default:
+  before_script:
+    - apk add --no-cache ansible
+
+# variables:
+#   TEST: test
+
+# configure:
+#   stage: configure
+#   only:
+#     - main
+#   script:
+#     - ansible-playbook -i hosts.ini ansible/deploy.yml -t configure -v -D
+
+deploy:
+  stage: deploy
+  only:
+    - main
+  script:
+    - ansible-playbook -i hosts.ini ansible/deploy.yml -v -D
