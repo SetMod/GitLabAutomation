@@ -3,7 +3,7 @@ packages:
   - py3-pip
   - git
 
-git_repo_clone_url: http://localhost:8080/practice/automation.git
+git_repo_clone_url: http://gitlab-web/practice/automation.git
 git_repo_clone_dest: /opt/automation
 
 app_requirements_file: "{{ git_repo_clone_dest }}/requirements.txt"
