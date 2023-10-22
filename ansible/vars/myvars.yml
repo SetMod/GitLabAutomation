@@ -1,6 +1,6 @@
 packages:
   - python3
-  - python3-pip
+  - py3-pip
   - git
 
 git_repo_clone_url: http://localhost:8080/practice/automation.git
