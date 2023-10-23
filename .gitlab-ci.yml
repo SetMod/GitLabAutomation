@@ -38,10 +38,16 @@ build:
     - docker build --tag ${IMAGE_NAME}:${IMAGE_TAG} .
     - docker run --rm -d -p 5000 -e APP_PORT=${APP_PORT} --name ${IMAGE_NAME} ${IMAGE_NAME}:${IMAGE_TAG}
     - docker stop ${IMAGE_NAME}
+    - |
+      if [ -n $REGISTRY_USER ] && [ -n $REGISTRY_PASSWORD ]; then
+        docker login -u $REGISTRY_USER -p $REGISTRY_PASSWORD
+        docker push ${IMAGE_NAME}:${IMAGE_TAG}
+      fi
 
-# deploy:
-#   stage: deploy
-#   only:
-#     - main
-#   script:
-#     - ansible-playbook -i ansible/hosts.ini ansible/deploy.yml -v -D
+deploy:
+  stage: deploy
+  only:
+    - main
+  when: manual
+  script:
+    - ansible-playbook -i ansible/hosts.ini ansible/deploy.yml -v -D
