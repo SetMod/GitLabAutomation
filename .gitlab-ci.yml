@@ -41,9 +41,10 @@ build:
     - docker run --rm -d -p 5000 -e APP_PORT=${APP_PORT} --name ${IMAGE_NAME} ${IMAGE_NAME}:${IMAGE_TAG}
     - docker stop ${IMAGE_NAME}
     - |
-      if [ -n $REGISTRY_USER ] && [ -n $REGISTRY_PASSWORD ]; then
-        docker login -u $REGISTRY_USER -p $REGISTRY_PASSWORD
-        docker push ${IMAGE_NAME}:${IMAGE_TAG}
+      if [ -n ${REGISTRY_USER} ] && [ -n ${REGISTRY_PASSWORD} ]; then
+        docker login -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD}
+        echo "Pushing image to ${REGISTRY_USER}/${IMAGE_NAME}:${IMAGE_TAG}"
+        docker push ${REGISTRY_USER}/${IMAGE_NAME}:${IMAGE_TAG}
       fi
 
 deploy:
