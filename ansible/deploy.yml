@@ -17,14 +17,6 @@
       tags:
         - configure
 
-    - name: Install Python dependencies
-      ansible.builtin.pip:
-        requirements: "{{ app_requirements_file }}"
-      when:
-        - app_requirements_file is defined
-      tags:
-        - deploy
-
     - name: Set app image tag if not defined
       ansible.builtin.set_fact:
         app_image_tag: latest
