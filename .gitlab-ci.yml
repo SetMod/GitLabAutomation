@@ -2,24 +2,44 @@ stages:
   - deploy
 
 default:
-  image: alpine/ansible:2.14.5
   tags:
     - practice
+  services:
+    - docker:24.0.5-dind
   before_script:
-    - echo "------ Install Ansible Collection ------"
-    - ansible-galaxy collection install community.docker
-    - ansible --version
-    - echo "------ Install Docker CLI ------"
+    - echo "------ Install Ansible ------"
     - apk update
-    - apk add --no-cache docker-cli
+    - apk add --no-cache ansible ansible-lint
+    - ansible --version
     - docker info
 
 variables:
   ANSIBLE_FORCE_COLOR: "True"
   ANSIBLE_PIPELINING: "True"
-deploy:
+  IMAGE_NAME: practice
+  IMAGE_TAG: v1
+  APP_PORT: 5000
+
+ansible-lint:
+  stage: deploy
+  only:
+    changes:
+      - ansible/*
+  script:
+    - ansible-lint -v ansible/*.yml ansible/*/*.yml
+
+build:
   stage: deploy
   only:
     - main
   script:
-    - ansible-playbook -i ansible/hosts.ini ansible/deploy.yml -v -D
+    - docker build --tag ${IMAGE_NAME}:${IMAGE_TAG} .
+    - docker run --rm -d -p 5000 -e APP_PORT=${APP_PORT} --name ${IMAGE_NAME} ${IMAGE_NAME}:${IMAGE_TAG}
+    - docker stop ${IMAGE_NAME}
+
+# deploy:
+#   stage: deploy
+#   only:
+#     - main
+#   script:
+#     - ansible-playbook -i ansible/hosts.ini ansible/deploy.yml -v -D
