@@ -44,6 +44,7 @@ build:
       if [ -n ${REGISTRY_USER} ] && [ -n ${REGISTRY_PASSWORD} ]; then
         docker login -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD}
         echo "Pushing image to ${REGISTRY_USER}/${IMAGE_NAME}:${IMAGE_TAG}"
+        docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${REGISTRY_USER}/${IMAGE_NAME}:${IMAGE_TAG}
         docker push ${REGISTRY_USER}/${IMAGE_NAME}:${IMAGE_TAG}
       fi
 
