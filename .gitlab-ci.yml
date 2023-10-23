@@ -9,8 +9,8 @@ default:
     - apk update
     - apk add --no-cache python3 py3-pip
     - rm -rf /var/cache/apk/*
+    - python3 -m pip install --upgrade pip
     - python3 -m pip install ansible
-    - python3 -m pip install --upgrade pip ansible
     - ansible-galaxy collection install community.docker
     - ansible --version
     - docker info
