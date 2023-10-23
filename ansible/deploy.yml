@@ -7,59 +7,12 @@
   tasks:
     - name: Install packages
       ansible.builtin.package:
-        name: "{{ item }}" 
+        name: "{{ item }}"
         state: present
       when:
         - packages is defined
         - packages is iterable
         - packages | length > 1
-      loop: "{{ packages }}" 
+      loop: "{{ packages }}"
       tags:
         - configure
-
-    - name: Install Python packages
-      ansible.builtin.pip:
-        name: "{{ pip_packages }}"
-      when:
-        - pip_packages is defined
-        - pip_packages is iterable
-        - pip_packages | length > 1
-      tags:
-        - deploy
-
-    - name: Set app image tag if not defined
-      ansible.builtin.set_fact:
-        app_image_tag: latest
-      when: app_image_tag is not defined
-
-    - name: Build image "{{ app_image_name }}:{{ app_image_tag }}"
-      community.docker.docker_image:
-        name: "{{ app_image_name }}"
-        tag: "{{ app_image_tag }}"
-        build:
-          path: "{{ base_dir }}"
-        source: build
-        state: present
-
-    - name: Start "{{ app_image_name }}" container
-      community.docker.docker_container:
-        name: "{{ app_image_name }}"
-        state: present
-        image: "{{ app_image_name }}:{{ app_image_tag }}"
-
-    - name: Check app response and content 
-      ansible.builtin.uri:
-        url: http://localhost:{{ app_port }}
-        method: GET
-        return_content: true
-        timeout: 10
-      retries: 10
-      delay: 10
-      until: app_response.status == 200
-      register: app_response
-      failed_when: app_response is failed or "'Hello, World!' not in app_response.content"
-
-    - name: Stop "{{ app_image_name }}" container
-      community.docker.docker_container:
-        name: "{{ app_image_name }}"
-        state: stopped
