@@ -1,13 +1,13 @@
 packages:
   - git
 
-base_dir: lookup('env', 'CI_PROJECT_DIR') | default("/builds/practice/automation")
+base_dir: "{{ lookup('env', 'CI_PROJECT_DIR') | default('/builds/practice/automation') }}"
 app_requirements_file: "{{ base_dir }}/requirements.txt"
 app_path: "{{ base_dir }}/app.py"
-app_image_name: lookup('env', 'IMAGE_NAME') | default("practice-app")
-app_image_tag: lookup('env', 'IMAGE_TAG') | default("v1")
-app_port: lookup('env', 'APP_PORT') | default(5000)
-app_host: lookup('env', 'APP_HOST') | default("0.0.0.0")
+app_image_name: "{{ lookup('env', 'IMAGE_NAME') | default('practice') }}"
+app_image_tag: "{{ lookup('env', 'IMAGE_TAG') | default('v1') }}"
+app_port: "{{ lookup('env', 'APP_PORT') | default(5000) }}"
+app_host: "{{ lookup('env', 'APP_HOST') | default('0.0.0.0') }}"
 
-registry_user: lookup('env', 'REGISTRY_USER')
-registry_password: lookup('env', 'REGISTRY_PASSWORD')
+registry_user: "{{ lookup('env', 'REGISTRY_USER') }}"
+registry_password: "{{ lookup('env', 'REGISTRY_PASSWORD') }}"
