@@ -1,9 +1,6 @@
 packages:
   - git
 
-pip_packages:
-  - requests
-
 base_dir: /builds/practice/automation
 app_dockerfile_path: "{{ base_dir }}/Dockerfile"
 
