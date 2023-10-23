@@ -13,11 +13,10 @@ default:
 variables:
   ANSIBLE_FORCE_COLOR: "True"
   ANSIBLE_PIPELINING: "True"
-
 deploy:
   stage: deploy
   only:
     - main
   script:
-    - ansible-galaxy collection install community.docker
+    - docker info
     - ansible-playbook -i ansible/hosts.ini ansible/deploy.yml -v -D
