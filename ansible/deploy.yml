@@ -16,3 +16,24 @@
       loop: "{{ packages }}"
       tags:
         - configure
+
+    - name: Login to Docker Hub
+      ansible.builtin.command:
+        cmd: docker login -u {{ registry_user }} -p {{ registry_password }}
+      when:
+        - registry_user is defined
+        - registry_password is defined
+      tags:
+        - deploy
+
+    - name: Pull docker image {{ app_image_name }}:{{ app_image_tag }}
+      ansible.builtin.command:
+        cmd: docker pull {{ app_image_name }}:{{ app_image_tag }}
+      tags:
+        - deploy
+
+    - name: Start docker container
+      ansible.builtin.command:
+        cmd: docker run -d --restart=always -p {{ app_port }}:{{ app_port }} --name {{ app_image_name }} {{ app_image_name }}:{{ app_image_tag }}
+      tags:
+        - deploy
