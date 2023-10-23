@@ -24,6 +24,10 @@
       tags:
         - deploy
       block:
+        - name: Set full image name
+          ansible.builtin.set_fact:
+            app_image_full: "{{ registry_user }}/{{ app_image_name }}:{{ app_image_tag }}"
+
         - name: Login to Docker Hub
           ansible.builtin.command:
             cmd: docker login -u {{ registry_user }} -p {{ registry_password }}
@@ -32,12 +36,12 @@
 
         - name: Pull docker image
           ansible.builtin.command:
-            cmd: docker pull {{ registry_user }}/{{ app_image_name }}:{{ app_image_tag }}
+            cmd: docker pull {{ app_image_full }}
           register: docker_pull_result
           changed_when: docker_pull_result.rc != 0
 
         - name: Start docker container
           ansible.builtin.command:
-            cmd: docker run -d --restart=always -p {{ app_port }}:{{ app_port }} --name {{ app_image_name }} {{ registry_user }}/{{ app_image_name }}:{{ app_image_tag }}
+            cmd: docker run -d --restart=always -p {{ app_port }}:{{ app_port }} --name {{ app_image_name }} {{ app_image_full }}
           register: docker_run_result
           changed_when: docker_run_result.rc != 0
