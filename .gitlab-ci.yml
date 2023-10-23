@@ -2,18 +2,16 @@ stages:
   - deploy
 
 default:
+  image: alpine/ansible:2.14.5
   tags:
     - practice
   before_script:
-    - echo "------ Install python3 ------"
-    - apk update
-    - apk add --no-cache gcc python3 py3-pip
-    - rm -rf /var/cache/apk/*
-    - echo "------ Install Ansible ------"
-    - python3 -m pip install --upgrade pip
-    - python3 -m pip install ansible
+    - echo "------ Install Ansible Collection ------"
     - ansible-galaxy collection install community.docker
     - ansible --version
+    - echo "------ Install Docker CLI ------"
+    - apk update
+    - apk add --no-cache docker-cli
     - docker info
 
 variables:
