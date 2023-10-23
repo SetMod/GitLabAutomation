@@ -17,6 +17,16 @@
       tags:
         - configure
 
+    - name: Install Python packages
+      ansible.builtin.pip:
+        name: "{{ pip_packages }}"
+      when:
+        - pip_packages is defined
+        - pip_packages is iterable
+        - pip_packages | length > 1
+      tags:
+        - deploy
+
     - name: Set app image tag if not defined
       ansible.builtin.set_fact:
         app_image_tag: latest
