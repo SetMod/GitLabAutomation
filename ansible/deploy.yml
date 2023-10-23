@@ -27,11 +27,17 @@
         - name: Login to Docker Hub
           ansible.builtin.command:
             cmd: docker login -u {{ registry_user }} -p {{ registry_password }}
+          register: docker_login_result
+          changed_when: docker_login_result.rc != 0
 
         - name: Pull docker image {{ app_image_name }}:{{ app_image_tag }}
           ansible.builtin.command:
             cmd: docker pull {{ app_image_name }}:{{ app_image_tag }}
+          register: docker_pull_result
+          changed_when: docker_pull_result.rc != 0
 
         - name: Start docker container
           ansible.builtin.command:
             cmd: docker run -d --restart=always -p {{ app_port }}:{{ app_port }} --name {{ app_image_name }} {{ app_image_name }}:{{ app_image_tag }}
+          register: docker_run_result
+          changed_when: docker_run_result.rc != 0
