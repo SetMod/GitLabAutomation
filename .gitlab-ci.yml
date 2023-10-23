@@ -9,10 +9,14 @@ default:
     - apk update
     - apk add --no-cache ansible
     - rm -rf /var/cache/apk/*
+    - ansible-galaxy collection install community.docker
+    - pip install requests
 
 variables:
   ANSIBLE_FORCE_COLOR: "True"
   ANSIBLE_PIPELINING: "True"
+  IMAGE_NAME: practice-app
+  IMAGE_TAG: v1
 deploy:
   stage: deploy
   only:
