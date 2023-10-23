@@ -5,10 +5,11 @@ default:
   tags:
     - practice
   before_script:
-    - echo "------ Install Ansible ------"
+    - echo "------ Install python3 ------"
     - apk update
-    - apk add --no-cache python3 py3-pip
+    - apk add --no-cache gcc python3 py3-pip
     - rm -rf /var/cache/apk/*
+    - echo "------ Install Ansible ------"
     - python3 -m pip install --upgrade pip
     - python3 -m pip install ansible
     - ansible-galaxy collection install community.docker
