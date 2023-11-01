@@ -12,11 +12,13 @@ docker exec -it gitlab-runner1 \
     --non-interactive \
     --registration-token ${registration_token} \
     --locked=false \
-    --description docker-stable \
+    --name docker-stable \
     --url ${url} \
     --executor docker \
     --docker-image docker:stable \
-    --docker-volumes "/var/run/docker.sock:/var/run/docker.sock" \
-    --docker-network-mode gitlab-network
-    
+    --docker-services_privileged=true \
+    --docker-volumes "/cache" \
+    --docker-volumes "/certs" \
+    --docker-network-mode gitlab-runner-network
+
 # run the script to register the runner in Gitlab

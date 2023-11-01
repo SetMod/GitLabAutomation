@@ -1,5 +1,11 @@
 # Practice
 
+## Create GitLab runner docker network
+
+```sh
+docker network create gitlab-runner-network
+```
+
 ## Spin up GitLab Web and GitLab runner
 
 ```sh
@@ -10,7 +16,7 @@ docker compose logs
 docker compose down
 ```
 
-## Login to GitLab
+## Login to GitLab Web
 
 Username: `root`
 Password:
@@ -23,8 +29,8 @@ After logging in create your onw user with Administrator access.
 
 ## Clone repository
 
-> NOTE: Add your SSH pub key to GitLab and edit ~/.ssh/config with:
->
+> **NOTE:** Add your SSH pub key to GitLab and edit `~/.ssh/config` with:
+> 
 > ```config
 > Host localhost
 >     Port 2222
