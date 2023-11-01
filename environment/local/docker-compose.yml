@@ -1,0 +1,40 @@
+version: '4.5'
+services:
+
+  gitlab-web:
+    image: gitlab/gitlab-ce:latest
+    restart: always
+    container_name: gitlab-web
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://gitlab-web'
+        gitlab_rails['gitlab_shell_ssh_port'] = 2222
+    ports:
+      - "8080:80"
+      - "8443:443"
+      - "2222:22"
+    volumes:
+      - ./gitlab/config:/etc/gitlab
+      - ./gitlab/logs:/var/log/gitlab
+      - ./gitlab/data:/var/opt/gitlab
+    networks:
+      - gitlab-network
+
+  gitlab-runner1:
+    image: gitlab/gitlab-runner:alpine
+    restart: always
+    container_name: gitlab-runner1
+    hostname: gitlab-runner1
+    depends_on:
+      - gitlab-web
+    volumes:
+      - ./gitlab-runner/config:/etc/gitlab-runner
+      - ./gitlab-runner/cache:/cache
+      - ./gitlab-runner/certs:/certs
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - gitlab-network
+
+networks:
+  gitlab-network:
+    name: gitlab-network
