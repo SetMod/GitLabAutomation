@@ -26,18 +26,18 @@ variables:
 
 ansible-lint:
   stage: lint
+  script:
+    - ansible-lint -v ansible/*.yml ansible/*/*.yml
   only:
     changes:
       - ansible/*
-  script:
-    - ansible-lint -v ansible/*.yml ansible/*/*.yml
 
 build:
   stage: build
   only:
     - main
   script:
-    - docker build --tag ${IMAGE_NAME}:${IMAGE_TAG} .
+    - docker build --tag ${IMAGE_NAME}:${IMAGE_TAG} app/
     - docker run --rm -d -p 5000 -e APP_PORT=${APP_PORT} --name ${IMAGE_NAME} ${IMAGE_NAME}:${IMAGE_TAG}
     - docker stop ${IMAGE_NAME}
     - |
@@ -47,6 +47,9 @@ build:
         docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${REGISTRY_USER}/${IMAGE_NAME}:${IMAGE_TAG}
         docker push ${REGISTRY_USER}/${IMAGE_NAME}:${IMAGE_TAG}
       fi
+  rules:
+    - changes:
+        - app/*
 
 deploy:
   stage: deploy
@@ -55,3 +58,6 @@ deploy:
   when: manual
   script:
     - ansible-playbook -i ansible/hosts.ini ansible/deploy.yml -v -D
+  rules:
+    - changes:
+        - app/*
